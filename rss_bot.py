@@ -3,7 +3,7 @@ import feedparser
 
 BOT_TOKEN = "8563577508:AAGvTSX2NunzroN0vjbvtZ69n6fQjkL5EO4"
 CHAT_ID = "-1003502019216"
-RSS_URL = "https://feeds.reuters.com/reuters/businessNews"
+RSS_URL = "https://khabargaon.com/category/business/feed"
 
 feed = feedparser.parse(RSS_URL)
 
