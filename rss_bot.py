@@ -19,7 +19,7 @@ RSS_FEEDS = [
 
 SEEN_FILE = "seen_links.json"
 
-# Load history
+# Load previously posted links
 if os.path.exists(SEEN_FILE):
     with open(SEEN_FILE, "r") as f:
         seen_links = set(json.load(f))
@@ -47,6 +47,6 @@ for feed_url in RSS_FEEDS:
 
         updated_links.add(link)
 
-# Save updated history
+# Save updated links
 with open(SEEN_FILE, "w") as f:
     json.dump(list(updated_links), f)
