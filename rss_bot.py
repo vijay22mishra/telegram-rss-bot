@@ -19,18 +19,19 @@ RSS_FEEDS = [
 
 SEEN_FILE = "seen_links.json"
 
+# Load history
 if os.path.exists(SEEN_FILE):
     with open(SEEN_FILE, "r") as f:
         seen_links = set(json.load(f))
 else:
     seen_links = set()
 
-new_links = set(seen_links)
+updated_links = set(seen_links)
 
 for feed_url in RSS_FEEDS:
     feed = feedparser.parse(feed_url)
 
-    for entry in feed.entries[:10]:
+    for entry in feed.entries:
         link = entry.link
 
         if link in seen_links:
@@ -44,7 +45,8 @@ for feed_url in RSS_FEEDS:
 
         requests.post(url, data=payload)
 
-        new_links.add(link)
+        updated_links.add(link)
 
+# Save updated history
 with open(SEEN_FILE, "w") as f:
-    json.dump(list(new_links), f)
+    json.dump(list(updated_links), f)
