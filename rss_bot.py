@@ -2,6 +2,7 @@ import requests
 import feedparser
 import json
 import os
+import subprocess
 
 BOT_TOKEN = "8563577508:AAGvTSX2NunzroN0vjbvtZ69n6fQjkL5EO4"
 CHAT_ID = "-1003502019216"
@@ -19,7 +20,7 @@ RSS_FEEDS = [
 
 SEEN_FILE = "seen_links.json"
 
-# Load old links
+# Load previous links
 if os.path.exists(SEEN_FILE):
     with open(SEEN_FILE, "r") as f:
         seen_links = set(json.load(f))
@@ -50,3 +51,10 @@ for feed_url in RSS_FEEDS:
 # Save updated links
 with open(SEEN_FILE, "w") as f:
     json.dump(list(new_links), f)
+
+# Commit file back to GitHub
+subprocess.run(["git", "config", "--global", "user.name", "github-actions"])
+subprocess.run(["git", "config", "--global", "user.email", "actions@github.com"])
+subprocess.run(["git", "add", SEEN_FILE])
+subprocess.run(["git", "commit", "-m", "Update seen links"])
+subprocess.run(["git", "push"])
