@@ -7,11 +7,9 @@ BOT_TOKEN = "8563577508:AAGvTSX2NunzroN0vjbvtZ69n6fQjkL5EO4"
 CHAT_ID = "-1003502019216"
 
 RSS_FEEDS = [
-    "https://khabargaon.com/category/lifestyle/feed",
     "https://khabargaon.com/category/business/feed",
     "https://khabargaon.com/category/sports/feed",
     "https://khabargaon.com/category/entertainment/feed",
-    "https://khabargaon.com/category/religion/feed",
     "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
     "https://www.thehindu.com/business/Economy/feeder/default.rss",
     "https://www.thehindubusinessline.com/news/feeder/default.rss",
