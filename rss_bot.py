@@ -13,6 +13,11 @@ RSS_FEEDS = [
     "https://khabargaon.com/category/entertainment/feed",
     "https://khabargaon.com/category/religion/feed",
     "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
+    "https://www.thehindu.com/business/Economy/feeder/default.rss",
+    "https://www.thehindubusinessline.com/news/feeder/default.rss",
+    "https://www.thehindubusinessline.com/markets/feeder/default.rss",
+    "https://www.thehindubusinessline.com/companies/feeder/default.rss",
+    "https://www.thehindubusinessline.com/data-stories/feeder/default.rss",
     "https://khabargaon.com/category/state/feed",
     "https://khabargaon.com/category/international/feed",
     "https://khabargaon.com/category/national/feed"
