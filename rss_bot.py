@@ -12,6 +12,7 @@ RSS_FEEDS = [
     "https://khabargaon.com/category/sports/feed",
     "https://khabargaon.com/category/entertainment/feed",
     "https://khabargaon.com/category/religion/feed",
+    "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
     "https://khabargaon.com/category/state/feed",
     "https://khabargaon.com/category/international/feed",
     "https://khabargaon.com/category/national/feed"
