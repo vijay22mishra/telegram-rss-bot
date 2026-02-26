@@ -9,6 +9,7 @@ CHAT_ID = "-1003502019216"
 RSS_FEEDS = [
     "https://khabargaon.com/category/business/feed",
     "https://khabargaon.com/category/sports/feed",
+    "https://nitter.net/_groww/rss",
     "https://khabargaon.com/category/entertainment/feed",
     "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
     "https://www.thehindu.com/business/Economy/feeder/default.rss",
