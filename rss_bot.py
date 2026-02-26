@@ -14,7 +14,7 @@ RSS_FEEDS = [
     "https://www.thehindu.com/business/Economy/feeder/default.rss",
     "https://www.thehindubusinessline.com/news/feeder/default.rss",
     "https://www.the"hindubusinessline.com/markets/feeder/default.rss",
-    "https://nitter.net/_groww",
+    "https://nitter.net/_groww/rss",
     "https://nitter.net/BloombergTV/rss",
     "https://nitter.net/moneycontrolcom/rss",
     "https://khabargaon.com/category/state/feed",
