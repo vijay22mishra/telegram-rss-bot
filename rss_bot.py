@@ -10,11 +10,11 @@ RSS_FEEDS = [
     "https://khabargaon.com/category/business/feed",
     "https://khabargaon.com/category/sports/feed",
     "https://nitter.net/_groww/rss",
+    "https://nitter.net/Reuters/rss",
+    "https://nitter.net/ReutersBiz/rss",
     "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
     "https://www.thehindubusinessline.com/news/feeder/default.rss",
     "https://www.thehindubusinessline.com/markets/feeder/default.rss",
-    "https://nitter.net/moneycontrolcom/rss",
-    "https://khabargaon.com/category/state/feed",
     "https://khabargaon.com/category/international/feed",
     "https://khabargaon.com/category/national/feed"
 ]
