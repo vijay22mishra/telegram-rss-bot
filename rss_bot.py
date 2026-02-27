@@ -13,6 +13,8 @@ RSS_FEEDS = [
     "https://nitter.net/Reuters/rss",
     "https://nitter.net/ReutersBiz/rss",
     "https://nitter.net/livemint/rss",
+    "https://aninews.in/rss/feed/category/business.xml",
+    "https://aninews.in/rss/feed/category/world.xml",
     "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
     "https://www.thehindubusinessline.com/news/feeder/default.rss",
     "https://www.thehindubusinessline.com/markets/feeder/default.rss",
