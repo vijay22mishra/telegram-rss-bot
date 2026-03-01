@@ -12,7 +12,9 @@ RSS_FEEDS = [
      "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
     "https://www.thehindubusinessline.com/news/feeder/default.rss",
     "https://www.thehindubusinessline.com/markets/feeder/default.rss",
-    "https://www.livemint.com/rss/markets"
+    "https://www.livemint.com/rss/markets",
+    "https://www.livemint.com/rss/news",
+    "https://www.livemint.com/rss/companies"
 ]
 
 SEEN_FILE = "seen_links.json"
