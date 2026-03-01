@@ -9,16 +9,10 @@ BOT_TOKEN = "8563577508:AAGvTSX2NunzroN0vjbvtZ69n6fQjkL5EO4"
 CHAT_ID = "-1003502019216"
 
 RSS_FEEDS = [
-    "https://khabargaon.com/category/business/feed",
-    "https://khabargaon.com/category/sports/feed",
-    "https://nitter.net/_groww/rss",
-    "https://nitter.net/ReutersBiz/rss",
-    "https://nitter.net/livemint/rss",
-    "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
+     "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
     "https://www.thehindubusinessline.com/news/feeder/default.rss",
     "https://www.thehindubusinessline.com/markets/feeder/default.rss",
-    "https://khabargaon.com/category/international/feed",
-    "https://khabargaon.com/category/national/feed"
+
 ]
 
 SEEN_FILE = "seen_links.json"
