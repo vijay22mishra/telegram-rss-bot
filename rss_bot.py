@@ -46,6 +46,8 @@ for feed_url in RSS_FEEDS:
         payload = {"chat_id": CHAT_ID, "text": message}
 
         requests.post(url, data=payload)
+        import time
+        time.sleep(0.5)
 
         updated_links.add(link)
 
