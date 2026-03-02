@@ -137,9 +137,9 @@ for feed_url in RSS_FEEDS:
 
 # ---------- DIGEST POSTING ----------
 
-current_time = datetime.now().strftime("%H:%M")
+current_hour = datetime.now().strftime("%H")
 
-if current_time in DIGEST_TIMES and digest_data:
+if current_hour in ["09","15","21","03"]:
 
     digest_text = "🌍 <b>WORLD IN LAST FEW HOURS</b>\n\n"
 
