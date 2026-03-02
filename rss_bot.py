@@ -136,10 +136,26 @@ for feed_url in RSS_FEEDS:
             pass
 
 # ---------- DIGEST POSTING ----------
+# ---------- IMPROVED DIGEST TRIGGER ----------
 
-current_hour = datetime.now().strftime("%H")
+STATE_FILE = "digest_state.json"
 
-if current_hour in ["09","15","21","03"]:
+# Load last sent state
+if os.path.exists(STATE_FILE):
+    state = json.load(open(STATE_FILE))
+else:
+    state = {"last_sent": ""}
+
+now = datetime.now()
+current_hour = now.strftime("%H")
+current_date = now.strftime("%Y-%m-%d")
+
+digest_hours = ["09", "15", "21", "03"]
+
+digest_id = f"{current_date}-{current_hour}"
+
+# Check if digest should be sent
+if current_hour in digest_hours and state["last_sent"] != digest_id and digest_data:
 
     digest_text = "🌍 <b>WORLD IN LAST FEW HOURS</b>\n\n"
 
@@ -149,7 +165,12 @@ if current_hour in ["09","15","21","03"]:
 
     send_message(digest_text)
 
-    digest_data = []  # clear after sending
+    # Update state
+    state["last_sent"] = digest_id
+    json.dump(state, open(STATE_FILE, "w"))
+
+    # Clear buffer
+    digest_data = []
 
 # ---------- SAVE FILES ----------
 
