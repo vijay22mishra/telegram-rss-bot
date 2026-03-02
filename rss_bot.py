@@ -5,7 +5,7 @@ import os
 import re
 import time
 import html
-from datetime import datetime
+from datetime import datetime,timedelta
 
 BOT_TOKEN = "8563577508:AAGvTSX2NunzroN0vjbvtZ69n6fQjkL5EO4"
 CHAT_ID = "-1003502019216"
@@ -136,17 +136,17 @@ for feed_url in RSS_FEEDS:
             pass
 
 # ---------- DIGEST POSTING ----------
-# ---------- IMPROVED DIGEST TRIGGER ----------
 
 STATE_FILE = "digest_state.json"
 
-# Load last sent state
 if os.path.exists(STATE_FILE):
     state = json.load(open(STATE_FILE))
 else:
     state = {"last_sent": ""}
 
-now = datetime.now()
+# Convert UTC → IST
+now = datetime.utcnow() + timedelta(hours=5, minutes=30)
+
 current_hour = now.strftime("%H")
 current_date = now.strftime("%Y-%m-%d")
 
@@ -154,7 +154,6 @@ digest_hours = ["09", "15", "21", "03"]
 
 digest_id = f"{current_date}-{current_hour}"
 
-# Check if digest should be sent
 if current_hour in digest_hours and state["last_sent"] != digest_id and digest_data:
 
     digest_text = "🌍 <b>WORLD IN LAST FEW HOURS</b>\n\n"
@@ -165,11 +164,9 @@ if current_hour in digest_hours and state["last_sent"] != digest_id and digest_d
 
     send_message(digest_text)
 
-    # Update state
     state["last_sent"] = digest_id
     json.dump(state, open(STATE_FILE, "w"))
 
-    # Clear buffer
     digest_data = []
 
 # ---------- SAVE FILES ----------
