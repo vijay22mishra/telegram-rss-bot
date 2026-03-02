@@ -14,7 +14,7 @@ SEEN_FILE = "seen_links.json"
 DIGEST_FILE = "digest_buffer.json"
 
 DIGEST_TIMES = ["09:00", "15:00", "21:00", "03:00"]
-MAX_POSTS_PER_RUN = 30
+MAX_POSTS_PER_RUN = 120
 
 RSS_FEEDS = [
      "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
