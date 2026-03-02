@@ -4,9 +4,17 @@ import json
 import os
 import re
 import time
+import html
+from datetime import datetime
 
 BOT_TOKEN = "8563577508:AAGvTSX2NunzroN0vjbvtZ69n6fQjkL5EO4"
 CHAT_ID = "-1003502019216"
+
+SEEN_FILE = "seen_links.json"
+DIGEST_FILE = "digest_buffer.json"
+
+DIGEST_TIMES = ["09:00", "15:00", "21:00", "03:00"]
+MAX_POSTS_PER_RUN = 30
 
 RSS_FEEDS = [
      "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
@@ -17,37 +25,26 @@ RSS_FEEDS = [
     "https://www.livemint.com/rss/companies"
 ]
 
-SEEN_FILE = "seen_links.json"
-
-# -----------------------------
-# Utility Functions
-# -----------------------------
+# ---------- Helpers ----------
 
 def clean_html(raw_html):
-    clean = re.sub('<.*?>', '', raw_html)
-    return clean.strip()
+    return re.sub('<.*?>', '', raw_html).strip()
 
 def get_summary(text, word_limit=30):
     words = text.split()
-    if len(words) <= word_limit:
-        return text
-    return " ".join(words[:word_limit]) + "..."
+    return " ".join(words[:word_limit]) + "..." if words else ""
 
 def extract_image(entry):
-    # Method 1: media_content
     if hasattr(entry, 'media_content'):
-        try:
-            return entry.media_content[0]['url']
-        except:
-            pass
+        for media in entry.media_content:
+            if 'url' in media:
+                return media['url']
 
-    # Method 2: enclosures
     if hasattr(entry, 'links'):
         for link in entry.links:
             if link.get('type') and "image" in link.get('type'):
                 return link.get('href')
 
-    # Method 3: image inside summary HTML
     if hasattr(entry, 'summary'):
         match = re.search(r'<img.*?src="(.*?)"', entry.summary)
         if match:
@@ -55,23 +52,27 @@ def extract_image(entry):
 
     return None
 
-# -----------------------------
-# Load Previously Posted Links
-# -----------------------------
+def send_message(text):
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    payload = {"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML"}
+    requests.post(url, data=payload)
+
+# ---------- Load files ----------
 
 if os.path.exists(SEEN_FILE):
-    with open(SEEN_FILE, "r") as f:
-        seen_links = set(json.load(f))
+    seen_links = set(json.load(open(SEEN_FILE)))
 else:
     seen_links = set()
 
+if os.path.exists(DIGEST_FILE):
+    digest_data = json.load(open(DIGEST_FILE))
+else:
+    digest_data = []
+
 updated_links = set(seen_links)
 
-# -----------------------------
-# Main Logic
-# -----------------------------
+# ---------- NEWS POSTING ----------
 
-MAX_POSTS_PER_RUN = 30
 posts_sent = 0
 
 for feed_url in RSS_FEEDS:
@@ -81,60 +82,76 @@ for feed_url in RSS_FEEDS:
         if posts_sent >= MAX_POSTS_PER_RUN:
             break
 
-        link = entry.link
-
-        if link in seen_links:
+        link = entry.get("link")
+        if not link or link in seen_links:
             continue
 
-        title = entry.title
+        title = html.escape(entry.get("title", "No Title"))
 
-        # Generate summary
         summary = ""
-        if hasattr(entry, 'summary'):
-            clean_text = clean_html(entry.summary)
-            summary = get_summary(clean_text, 30)
+        if hasattr(entry, "summary"):
+            summary = html.escape(get_summary(clean_html(entry.summary)))
 
-        # Extract image
         image_url = extract_image(entry)
 
-        # Final formatted message
         message = (
-            f"📰 <b>{title}</b>\n\n"
+            f"🟦 <b><a href='{link}'>{title}</a></b>\n\n"
             f"{summary}\n\n"
             f"<a href='{link}'>🔗 News Link</a>"
         )
 
-        if image_url:
-            url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto"
-            payload = {
-                "chat_id": CHAT_ID,
-                "photo": image_url,
-                "caption": message,
-                "parse_mode": "HTML"
-            }
-        else:
-            url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-            payload = {
-                "chat_id": CHAT_ID,
-                "text": message,
-                "parse_mode": "HTML"
-            }
+        try:
+            if image_url:
+                url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto"
+                payload = {
+                    "chat_id": CHAT_ID,
+                    "photo": image_url,
+                    "caption": message,
+                    "parse_mode": "HTML"
+                }
+            else:
+                url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+                payload = {
+                    "chat_id": CHAT_ID,
+                    "text": message,
+                    "parse_mode": "HTML"
+                }
 
-        response = requests.post(url, data=payload)
+            r = requests.post(url, data=payload)
 
-        # Small delay to avoid Telegram rate limits
-        time.sleep(0.7)
+            if r.status_code == 200:
+                updated_links.add(link)
+                posts_sent += 1
 
-        if response.status_code == 200:
-            updated_links.add(link)
-            posts_sent += 1
+                # Save to digest buffer
+                digest_data.append({
+                    "title": title,
+                    "link": link,
+                    "time": datetime.utcnow().isoformat()
+                })
 
-    if posts_sent >= MAX_POSTS_PER_RUN:
-        break
+                time.sleep(0.7)
 
-# -----------------------------
-# Save Updated History
-# -----------------------------
+        except:
+            pass
 
-with open(SEEN_FILE, "w") as f:
-    json.dump(list(updated_links), f)
+# ---------- DIGEST POSTING ----------
+
+current_time = datetime.now().strftime("%H:%M")
+
+if current_time in DIGEST_TIMES and digest_data:
+
+    digest_text = "🌍 <b>WORLD IN LAST FEW HOURS</b>\n\n"
+
+    for item in digest_data[-20:]:
+        digest_text += f"🟦 {item['title']}\n"
+        digest_text += f"<a href='{item['link']}'>🔗 News Link</a>\n\n"
+
+    send_message(digest_text)
+
+    digest_data = []  # clear after sending
+
+# ---------- SAVE FILES ----------
+
+json.dump(list(updated_links), open(SEEN_FILE, "w"))
+json.dump(digest_data, open(DIGEST_FILE, "w"))
