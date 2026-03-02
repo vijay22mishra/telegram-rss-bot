@@ -17,9 +17,11 @@ DIGEST_TIMES = ["09:00", "15:00", "21:00", "03:00"]
 MAX_POSTS_PER_RUN = 120
 
 RSS_FEEDS = [
-     "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
+    "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
     "https://www.thehindubusinessline.com/news/feeder/default.rss",
     "https://www.thehindubusinessline.com/markets/feeder/default.rss",
+     "https://khabargaon.com/category/international/feed",
+    "https://khabargaon.com/category/national/feed" 
     "https://www.livemint.com/rss/markets",
     "https://www.livemint.com/rss/news",
     "https://www.livemint.com/rss/companies"
