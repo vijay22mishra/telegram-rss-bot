@@ -22,6 +22,7 @@ RSS_FEEDS = [
     "https://www.thehindubusinessline.com/news/feeder/default.rss",
     "https://www.thehindubusinessline.com/markets/feeder/default.rss",
     "https://www.livemint.com/rss/markets",
+    "https://www.thehansindia.com/sports/feed",
     "https://www.livemint.com/rss/news",
    
 ]
