@@ -20,11 +20,8 @@ RSS_FEEDS = [
     "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
     "https://www.thehindubusinessline.com/news/feeder/default.rss",
     "https://www.thehindubusinessline.com/markets/feeder/default.rss",
-     "https://khabargaon.com/category/international/feed",
-    "https://khabargaon.com/category/national/feed" 
     "https://www.livemint.com/rss/markets",
     "https://www.livemint.com/rss/news",
-    "https://www.livemint.com/rss/companies"
 ]
 
 # ---------- Helpers ----------
