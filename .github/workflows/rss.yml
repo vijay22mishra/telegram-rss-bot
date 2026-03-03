@@ -30,10 +30,13 @@ jobs:
       - name: Run script
         run: python rss_bot.py
 
-      - name: Commit updated links
+      - name: Commit updated state
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add seen_links.json
-          git commit -m "Update seen links" || echo "No changes"
+
+          git add seen_links.json digest_buffer.json digest_state.json || true
+
+          git diff --cached --quiet || git commit -m "Update bot state"
+
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
