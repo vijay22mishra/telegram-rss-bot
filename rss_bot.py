@@ -5,16 +5,17 @@ import os
 import re
 import time
 import html
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 BOT_TOKEN = "8563577508:AAGvTSX2NunzroN0vjbvtZ69n6fQjkL5EO4"
 CHAT_ID = "-1003502019216"
 
 SEEN_FILE = "seen_links.json"
 DIGEST_FILE = "digest_buffer.json"
+STATE_FILE = "digest_state.json"
 
-DIGEST_TIMES = ["09:00", "15:00", "21:00", "03:00"]
-MAX_POSTS_PER_RUN = 120
+MAX_POSTS_PER_RUN = 300
+MIN_ITEMS_FOR_DIGEST = 1  # change to 3 if you want minimum 3 headlines
 
 RSS_FEEDS = [
     "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
@@ -22,9 +23,10 @@ RSS_FEEDS = [
     "https://www.thehindubusinessline.com/markets/feeder/default.rss",
     "https://www.livemint.com/rss/markets",
     "https://www.livemint.com/rss/news",
+   
 ]
 
-# ---------- Helpers ----------
+# ------------------ Helpers ------------------
 
 def clean_html(raw_html):
     return re.sub('<.*?>', '', raw_html).strip()
@@ -53,10 +55,15 @@ def extract_image(entry):
 
 def send_message(text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    payload = {"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML"}
+    payload = {
+        "chat_id": CHAT_ID,
+        "text": text,
+        "parse_mode": "HTML",
+        "disable_web_page_preview": True
+    }
     requests.post(url, data=payload)
 
-# ---------- Load files ----------
+# ------------------ Load State ------------------
 
 if os.path.exists(SEEN_FILE):
     seen_links = set(json.load(open(SEEN_FILE)))
@@ -68,11 +75,15 @@ if os.path.exists(DIGEST_FILE):
 else:
     digest_data = []
 
+if os.path.exists(STATE_FILE):
+    state = json.load(open(STATE_FILE))
+else:
+    state = {"last_sent": ""}
+
 updated_links = set(seen_links)
-
-# ---------- NEWS POSTING ----------
-
 posts_sent = 0
+
+# ------------------ NEWS POSTING ------------------
 
 for feed_url in RSS_FEEDS:
     feed = feedparser.parse(feed_url)
@@ -122,7 +133,6 @@ for feed_url in RSS_FEEDS:
                 updated_links.add(link)
                 posts_sent += 1
 
-                # Save to digest buffer
                 digest_data.append({
                     "title": title,
                     "link": link,
@@ -134,16 +144,12 @@ for feed_url in RSS_FEEDS:
         except:
             pass
 
-# ---------- DIGEST POSTING ----------
+    if posts_sent >= MAX_POSTS_PER_RUN:
+        break
 
-STATE_FILE = "digest_state.json"
+# ------------------ DIGEST POSTING ------------------
 
-if os.path.exists(STATE_FILE):
-    state = json.load(open(STATE_FILE))
-else:
-    state = {"last_sent": ""}
-
-# Convert UTC → IST
+# Convert UTC to IST
 now = datetime.utcnow() + timedelta(hours=5, minutes=30)
 
 current_hour = now.strftime("%H")
@@ -153,22 +159,32 @@ digest_hours = ["09", "15", "21", "03"]
 
 digest_id = f"{current_date}-{current_hour}"
 
-if current_hour in digest_hours and state["last_sent"] != digest_id and digest_data:
+if (
+    current_hour in digest_hours
+    and state["last_sent"] != digest_id
+    and len(digest_data) >= MIN_ITEMS_FOR_DIGEST
+):
+
+    # Sort newest first
+    recent_items = sorted(
+        digest_data,
+        key=lambda x: x["time"],
+        reverse=True
+    )
 
     digest_text = "🌍 <b>WORLD IN LAST FEW HOURS</b>\n\n"
 
-    for item in digest_data[-20:]:
+    for item in recent_items:
         digest_text += f"🟦 {item['title']}\n"
         digest_text += f"<a href='{item['link']}'>🔗 News Link</a>\n\n"
 
     send_message(digest_text)
 
     state["last_sent"] = digest_id
-    json.dump(state, open(STATE_FILE, "w"))
-
     digest_data = []
 
-# ---------- SAVE FILES ----------
+# ------------------ Save State ------------------
 
 json.dump(list(updated_links), open(SEEN_FILE, "w"))
 json.dump(digest_data, open(DIGEST_FILE, "w"))
+json.dump(state, open(STATE_FILE, "w"))
