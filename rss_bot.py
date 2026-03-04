@@ -159,7 +159,7 @@ now = datetime.utcnow() + timedelta(hours=5, minutes=30)
 current_hour = now.strftime("%H")
 current_date = now.strftime("%Y-%m-%d")
 
-digest_hours = ["09", "15", "21", "03"]
+digest_hours = ["09", "12", "15", "18","21", "00", "03", "06"]
 
 digest_id = f"{current_date}-{current_hour}"
 
