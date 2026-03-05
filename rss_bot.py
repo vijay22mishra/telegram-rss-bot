@@ -15,7 +15,7 @@ DIGEST_FILE = "digest_buffer.json"
 STATE_FILE = "digest_state.json"
 
 MAX_POSTS_PER_RUN = 300
-MIN_ITEMS_FOR_DIGEST = 1  # change to 3 if you want minimum 3 headlines
+MIN_ITEMS_FOR_DIGEST = 3  # change to 3 if you want minimum 3 headlines
 
 RSS_FEEDS = [
     "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms",
