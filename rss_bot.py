@@ -189,6 +189,11 @@ if (
 
 # ------------------ Save State ------------------
 
-json.dump(list(updated_links), open(SEEN_FILE, "w"))
-json.dump(digest_data, open(DIGEST_FILE, "w"))
-json.dump(state, open(STATE_FILE, "w"))
+with open(SEEN_FILE, "w") as f:
+    json.dump(list(updated_links), f)
+
+with open(DIGEST_FILE, "w") as f:
+    json.dump(digest_data, f)
+
+with open(STATE_FILE, "w") as f:
+    json.dump(state, f)
