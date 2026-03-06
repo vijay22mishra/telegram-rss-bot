@@ -26,8 +26,7 @@ RSS_FEEDS = [
     "https://www.livemint.com/rss/news",
     #--------------------VIDEO--------------------------------------
     "https://www.youtube.com/feeds/videos.xml?channel_id=UCknLrEdhRCp1aegoMqRaCZg",
-    "https://www.youtube.com/feeds/videos.xml?channel_id=UCUI9vm69ZbAqRK3q3vKLWCQ",
-    "https://www.youtube.com/feeds/videos.xml?channel_id=UC_gUM8rL-Lrg6O3adPW9K1g"
+ 
 ]
 
 # ------------------ Helpers ------------------
